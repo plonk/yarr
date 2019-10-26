@@ -32,6 +32,9 @@ class Handler
         if p[:pid] == pid
           Process.kill("TERM", pid)
           success = true
+          true
+        else
+          false
         end
       end
       success
@@ -39,9 +42,30 @@ class Handler
   end
 
   def sum(a,b) a+b end
+
+  def update
+    @mon.synchronize do
+      begin
+        pid = Process.waitpid(-1, Process::WNOHANG)
+        puts "pid #{pid} has died"
+        @procs.delete_if do |p|
+          p[:pid] == pid
+        end
+      rescue Errno::ECHILD
+      end
+    end
+  end
+
 end
 
 use Rack::Reloader, 0
 use Rack::Runtime
 
-run Jimson::Server.new(Handler.new)
+handler = Handler.new
+Thread.new do
+  while true
+    sleep 1
+    handler.update
+  end
+end
+run Jimson::Server.new(handler)
