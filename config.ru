@@ -1,6 +1,6 @@
 =begin
 
-    Yarr - Yet another RTMP repeater
+    Yarr - Yet another RTMP relayer
     Copyright (C) 2019 Yoteichi
 
     This program is free software: you can redistribute it and/or modify
