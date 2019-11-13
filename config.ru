@@ -65,8 +65,6 @@ class Handler
     end
   end
 
-  def sum(a,b) a+b end
-
   # 内部状態の定期的な更新。
   def update
     @mon.synchronize do
