@@ -31,7 +31,7 @@ class Handler
 
   def stats
     @mon.synchronize do
-      @procs
+      @procs.dup
     end
   end
 
