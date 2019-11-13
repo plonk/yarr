@@ -98,8 +98,7 @@ class Handler
 
 end
 
-use Rack::Reloader, 0
-use Rack::Runtime
+use Rack::Runtime # X-Runtime ヘッダーで実行時間を返す。
 
 handler = Handler.new
 Thread.new do
