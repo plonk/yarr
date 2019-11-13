@@ -20,6 +20,7 @@
 
 require 'jimson'
 require 'monitor'
+require 'shellwords'
 
 class Handler
   extend Jimson::Handler
@@ -36,10 +37,13 @@ class Handler
   end
 
   def start(src, dst)
+    srcword = Shellwords.escape(src)
+    dstword = Shellwords.escape(dst)
+    pid = spawn("ffmpeg -loglevel -8 -i #{srcword} -vcodec copy -acodec copy -f flv #{dstword}")
     @mon.synchronize do
-      pid = spawn("ffmpeg -loglevel -8 -i #{src} -vcodec copy -acodec copy -f flv #{dst}")
       @procs << { pid: pid, src: src, dst: dst, created_at: Time.now }
     end
+    nil
   rescue => e
     p e
     raise
