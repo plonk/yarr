@@ -30,12 +30,19 @@ class Handler
     @procs = []
   end
 
+  # RPC method - stats()
+  # プロセスリストを返す。
   def stats
     @mon.synchronize do
+      # @procsの指す配列が破壊的変更を受けるので、マルチスレッド動作時
+      # に変更途中の状態が見える可能性を排除するため、コピーして返す。
       @procs.dup
     end
   end
 
+  # RPC method - start(src, dst)
+  # src: fetchするRTMP URL
+  # dst: publishするRTMP URL
   def start(src, dst)
     srcword = Shellwords.escape(src)
     dstword = Shellwords.escape(dst)
@@ -49,6 +56,10 @@ class Handler
     raise
   end
 
+  # RPC method - kill(pid)
+  # プロセスにTERMシグナルを送る。
+  # 成功時 true、失敗時 false を返す。
+  # pid: プロセスID
   def kill(pid)
     @mon.synchronize do
       success = false
