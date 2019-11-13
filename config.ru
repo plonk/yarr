@@ -67,15 +67,22 @@ class Handler
 
   def sum(a,b) a+b end
 
+  # 内部状態の定期的な更新。
   def update
     @mon.synchronize do
       begin
+        # 終了したプロセスをプロセスリストから外す。
         pid = Process.waitpid(-1, Process::WNOHANG)
-        puts "pid #{pid} has died"
-        @procs.delete_if do |pr|
-          pr[:pid] == pid
+        if pid
+          puts "pid #{pid} has died"
+          @procs.delete_if do |pr|
+            pr[:pid] == pid
+          end
+        else
+          # 子プロセスが存在するが、終了したものはない場合。
         end
       rescue Errno::ECHILD
+        # 起動直後など子プロセスがない場合、例外が上がる。
       end
     end
   end
