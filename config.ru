@@ -48,8 +48,8 @@ class Handler
   def kill(pid)
     @mon.synchronize do
       success = false
-      @procs.delete_if do |p|
-        if p[:pid] == pid
+      @procs.delete_if do |pr|
+        if pr[:pid] == pid
           Process.kill("TERM", pid)
           success = true
           true
@@ -68,8 +68,8 @@ class Handler
       begin
         pid = Process.waitpid(-1, Process::WNOHANG)
         puts "pid #{pid} has died"
-        @procs.delete_if do |p|
-          p[:pid] == pid
+        @procs.delete_if do |pr|
+          pr[:pid] == pid
         end
       rescue Errno::ECHILD
       end
