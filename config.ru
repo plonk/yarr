@@ -100,6 +100,8 @@ end
 
 use Rack::Runtime # X-Runtime ヘッダーで実行時間を返す。
 
+Process.setproctitle("yarr")
+
 handler = Handler.new
 Thread.new do
   while true
